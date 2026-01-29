@@ -12,6 +12,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = "usuarios.User"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
