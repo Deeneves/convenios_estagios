@@ -15,3 +15,6 @@ __pycache__/
 #Venv
 venv/
 .env
+
+#Django
+db.sqlite3
