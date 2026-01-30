@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Aluno — {{ aluno.user.get_full_name|default:aluno.user.username }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'academico:aluno_list' %}" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+</div>
+<h1 class="h2 mb-4"><i class="bi bi-person-badge me-2"></i>{{ aluno.user.get_full_name|default:aluno.user.username }}</h1>
+
+<div class="card mb-3">
+    <div class="card-header">Dados acadêmicos</div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Usuário (CPF)</dt>
+            <dd class="col-sm-9">{{ aluno.user.username }}</dd>
+            <dt class="col-sm-3">Matrícula</dt>
+            <dd class="col-sm-9">{{ aluno.matricula|default:"—" }}</dd>
+            <dt class="col-sm-3">Curso</dt>
+            <dd class="col-sm-9">{{ aluno.curso.nome|default:"—" }}</dd>
+            <dt class="col-sm-3">Situação</dt>
+            <dd class="col-sm-9">{{ aluno.get_situacao_display }}</dd>
+        </dl>
+    </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header">Dados pessoais</div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Data de nascimento</dt>
+            <dd class="col-sm-9">{{ aluno.data_nascimento|date:"d/m/Y"|default:"—" }}</dd>
+            <dt class="col-sm-3">RG</dt>
+            <dd class="col-sm-9">{{ aluno.rg|default:"—" }}</dd>
+            <dt class="col-sm-3">Estado civil</dt>
+            <dd class="col-sm-9">{{ aluno.get_estado_civil_display|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">Endereço</div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Logradouro</dt>
+            <dd class="col-sm-9">{{ aluno.logradouro|default:"—" }}{% if aluno.numero %}, {{ aluno.numero }}{% endif %}{% if aluno.complemento %} — {{ aluno.complemento }}{% endif %}</dd>
+            <dt class="col-sm-3">Bairro</dt>
+            <dd class="col-sm-9">{{ aluno.bairro|default:"—" }}</dd>
+            <dt class="col-sm-3">Cidade / Estado</dt>
+            <dd class="col-sm-9">{{ aluno.cidade|default:"—" }}{% if aluno.estado %} / {{ aluno.estado }}{% endif %}</dd>
+            <dt class="col-sm-3">CEP</dt>
+            <dd class="col-sm-9">{{ aluno.cep|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

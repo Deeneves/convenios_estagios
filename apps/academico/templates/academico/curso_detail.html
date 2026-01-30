@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ curso.nome }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'academico:curso_list' %}" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+</div>
+<h1 class="h2 mb-4"><i class="bi bi-book me-2"></i>{{ curso.nome }}</h1>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Nome</dt>
+            <dd class="col-sm-9">{{ curso.nome }}</dd>
+            <dt class="col-sm-3">Faculdade</dt>
+            <dd class="col-sm-9">{{ curso.faculdade.nome }}</dd>
+            <dt class="col-sm-3">Duração</dt>
+            <dd class="col-sm-9">{{ curso.duracao }} semestres</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

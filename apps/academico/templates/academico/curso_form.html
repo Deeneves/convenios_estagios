@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar curso{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'academico:curso_list' %}" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+</div>
+<h1 class="h2 mb-4"><i class="bi bi-book me-2"></i>Cadastrar curso</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">{{ field.errors.0 }}</div>
+                {% endif %}
+                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+            </div>
+            {% endfor %}
+            <div class="d-flex gap-2 pt-2">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a href="{% url 'academico:curso_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
