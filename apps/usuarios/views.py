@@ -5,6 +5,8 @@ from .forms import LoginForm
 from .models import User
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from apps.academico.models import Aluno, Curso, Faculdade
+
 def login(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -30,7 +32,14 @@ def home(request):
         User.Role.SECRETARIA: 'dashboard/secretaria_home.html',
     }
     template = role_template.get(request.user.role, 'dashboard/aluno_home.html')
-    return render(request, template)
+    context = {}
+    if request.user.role == User.Role.DIRETOR:
+        context = {
+            "alunos_count": Aluno.objects.count(),
+            "cursos_count": Curso.objects.count(),
+            "faculdades_count": Faculdade.objects.count(),
+        }
+    return render(request, template, context)
 
 @login_required
 def logout(request):
