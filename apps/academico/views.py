@@ -20,6 +20,20 @@ class FaculdadeListView(LoginRequiredMixin, ListView):
     template_name = "academico/faculdade_list.html"
     paginate_by = 15
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            queryset = queryset.filter(nome__icontains=q)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["querystring"] = urlencode(query_params)
+        return context
+
 
 class FaculdadeCreateView(LoginRequiredMixin, CreateView):
     model = Faculdade
@@ -41,6 +55,24 @@ class CursoListView(LoginRequiredMixin, ListView):
     template_name = "academico/curso_list.html"
     paginate_by = 15
 
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related("faculdade")
+        q = self.request.GET.get("q", "").strip()
+        faculdade = self.request.GET.get("faculdade", "").strip()
+        if q:
+            queryset = queryset.filter(nome__icontains=q)
+        if faculdade:
+            queryset = queryset.filter(faculdade_id=faculdade)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["querystring"] = urlencode(query_params)
+        context["faculdades"] = Faculdade.objects.all()
+        return context
+
 
 class CursoCreateView(LoginRequiredMixin, CreateView):
     model = Curso
@@ -53,6 +85,20 @@ class CursoDetailView(LoginRequiredMixin, DetailView):
     model = Curso
     context_object_name = "curso"
     template_name = "academico/curso_detail.html"
+
+
+class FaculdadeUpdateView(LoginRequiredMixin, UpdateView):
+    model = Faculdade
+    form_class = FaculdadeForm
+    template_name = "academico/faculdade_form.html"
+    success_url = reverse_lazy("academico:faculdade_list")
+
+
+class CursoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Curso
+    form_class = CursoForm
+    template_name = "academico/curso_form.html"
+    success_url = reverse_lazy("academico:curso_list")
 
 
 # --- Aluno ---

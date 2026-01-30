@@ -7,10 +7,12 @@ urlpatterns = [
     # Faculdade
     path("faculdades/", views.FaculdadeListView.as_view(), name="faculdade_list"),
     path("faculdades/cadastrar/", views.FaculdadeCreateView.as_view(), name="faculdade_create"),
+    path("faculdades/<int:pk>/editar/", views.FaculdadeUpdateView.as_view(), name="faculdade_edit"),
     path("faculdades/<int:pk>/", views.FaculdadeDetailView.as_view(), name="faculdade_detail"),
     # Curso
     path("cursos/", views.CursoListView.as_view(), name="curso_list"),
     path("cursos/cadastrar/", views.CursoCreateView.as_view(), name="curso_create"),
+    path("cursos/<int:pk>/editar/", views.CursoUpdateView.as_view(), name="curso_edit"),
     path("cursos/<int:pk>/", views.CursoDetailView.as_view(), name="curso_detail"),
     # Aluno
     path("alunos/", views.AlunoListView.as_view(), name="aluno_list"),

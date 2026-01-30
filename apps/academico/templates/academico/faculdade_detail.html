@@ -12,12 +12,21 @@
     </a>
 </div>
 
-<h1 class="text-2xl font-bold text-gray-900 flex items-center mb-6">
-    <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-    </svg>
-    {{ faculdade.nome }}
-</h1>
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+        <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        {{ faculdade.nome }}
+    </h1>
+    <a href="{% url 'academico:faculdade_edit' faculdade.pk %}" class="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-medium rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar
+    </a>
+</div>
 
 <div class="bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-6">
