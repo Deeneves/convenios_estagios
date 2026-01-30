@@ -4,25 +4,42 @@
 
 {% block content %}
 <div class="flex justify-center">
-    <div class="max-w-3xl w-full">
-        <div class="text-center py-12">
-            <h1 class="text-4xl font-bold text-primary-600 mb-4 flex items-center justify-center">
-                <i data-lucide="clipboard-check" class="w-10 h-10 mr-3"></i>
-                Convênios e Estágios
-            </h1>
-            <p class="text-lg text-gray-500 mb-6">
-                Sistema de gestão de convênios e estágios acadêmicos.
-            </p>
-            {% if not user.is_authenticated %}
-            <a href="{% url 'login' %}" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                <i data-lucide="log-in" class="w-5 h-5 mr-2"></i>
-                Entrar no sistema
-            </a>
-            {% else %}
-            <p class="text-gray-500 mt-4">
-                Olá, <strong class="text-gray-700">{{ user.get_full_name|default:user.username }}</strong>. Use o menu acima para navegar.
-            </p>
-            {% endif %}
+    <div class="max-w-6xl w-full px-4 sm:px-6 lg:px-8">
+        <div class="py-10">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-bold text-primary-600 flex items-center">
+                        <i data-lucide="layout-dashboard" class="w-9 h-9 mr-3"></i>
+                        Painel do Diretor
+                    </h1>
+                    <p class="text-gray-500 mt-2">
+                        Visão geral do acadêmico: alunos, cursos e faculdades cadastrados.
+                    </p>
+                </div>
+                <div class="text-sm text-gray-500">
+                    Olá, <strong class="text-gray-700">{{ user.get_full_name|default:user.username }}</strong>
+                </div>
+            </div>
+
+            <div class="rounded-2xl overflow-hidden p-6 sm:p-8">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] rounded-[1.25rem] bg-powder-blue text-primary-800 p-6">
+                        <span class="text-4xl sm:text-5xl font-bold tabular-nums">{{ alunos_count|default:"0" }}</span>
+                        <span class="text-sm font-semibold mt-2">Alunos</span>
+                        <i data-lucide="users" class="w-8 h-8 mt-2 text-primary-700" aria-hidden="true"></i>
+                    </div>
+                    <div class="flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] rounded-[1.25rem] bg-powder-blue text-primary-800 p-6">
+                        <span class="text-4xl sm:text-5xl font-bold tabular-nums">{{ cursos_count|default:"0" }}</span>
+                        <span class="text-sm font-semibold mt-2">Cursos</span>
+                        <i data-lucide="book-open" class="w-8 h-8 mt-2 text-primary-700" aria-hidden="true"></i>
+                    </div>
+                    <div class="flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] rounded-[1.25rem] bg-powder-blue text-primary-800 p-6">
+                        <span class="text-4xl sm:text-5xl font-bold tabular-nums">{{ faculdades_count|default:"0" }}</span>
+                        <span class="text-sm font-semibold mt-2">Faculdades</span>
+                        <i data-lucide="school" class="w-8 h-8 mt-2 text-primary-700" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

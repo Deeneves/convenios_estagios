@@ -27,6 +27,27 @@
     --color-primary-500-rgb: 19 49 92;
 }
 
+/* Classes utilitárias para cores nomeadas da paleta */
+.bg-regal-navy { background-color: var(--color-regal-navy) !important; }
+.text-regal-navy { color: var(--color-regal-navy) !important; }
+.border-regal-navy { border-color: var(--color-regal-navy) !important; }
+
+.bg-oxford-navy { background-color: var(--color-oxford-navy) !important; }
+.text-oxford-navy { color: var(--color-oxford-navy) !important; }
+.border-oxford-navy { border-color: var(--color-oxford-navy) !important; }
+
+.bg-prussian-blue { background-color: var(--color-prussian-blue) !important; }
+.text-prussian-blue { color: var(--color-prussian-blue) !important; }
+.border-prussian-blue { border-color: var(--color-prussian-blue) !important; }
+
+.bg-powder-blue { background-color: var(--color-powder-blue) !important; }
+.text-powder-blue { color: var(--color-powder-blue) !important; }
+.border-powder-blue { border-color: var(--color-powder-blue) !important; }
+
+.bg-mint-cream { background-color: var(--color-mint-cream) !important; }
+.text-mint-cream { color: var(--color-mint-cream) !important; }
+.border-mint-cream { border-color: var(--color-mint-cream) !important; }
+
 /* Overrides de cores primárias (mantém compatibilidade com Tailwind gerado) */
 .bg-primary-50 { background-color: var(--color-primary-50) !important; }
 .bg-primary-100 { background-color: var(--color-primary-100) !important; }
