@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 
@@ -66,6 +68,11 @@ class Aluno(models.Model):
         max_length=50,
         verbose_name="Matrícula",
         unique=True,
+        null=True,
+        blank=True,
+    )
+    data_ingresso = models.DateField(
+        verbose_name="Data de ingresso",
         null=True,
         blank=True,
     )
@@ -140,6 +147,17 @@ class Aluno(models.Model):
         verbose_name = "Aluno"
         verbose_name_plural = "Alunos"
         ordering = ["user"]
+
+    def semestre_atual(self):
+        if not self.data_ingresso:
+            return None
+        ingresso_idx = self.data_ingresso.year * 2 + (1 if self.data_ingresso.month <= 6 else 2)
+        hoje = date.today()
+        hoje_idx = hoje.year * 2 + (1 if hoje.month <= 6 else 2)
+        semestre = hoje_idx - ingresso_idx + 1
+        if semestre < 1:
+            return None
+        return semestre
 
     def __str__(self):
         return str(self.user)

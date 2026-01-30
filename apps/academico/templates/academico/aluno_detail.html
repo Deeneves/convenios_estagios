@@ -41,6 +41,12 @@
             <dt class="text-sm font-medium text-gray-500">Curso</dt>
             <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.curso.nome|default:"—" }}</dd>
 
+            <dt class="text-sm font-medium text-gray-500">Data de ingresso</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.data_ingresso|date:"d/m/Y"|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Semestre atual</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.semestre_atual|default:"—" }}</dd>
+
             <dt class="text-sm font-medium text-gray-500">Situação</dt>
             <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.get_situacao_display }}</dd>
         </dl>
