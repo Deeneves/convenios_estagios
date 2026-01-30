@@ -63,10 +63,17 @@ class AlunoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user_preenchido_id = kwargs.pop("user_preenchido_id", None)
         super().__init__(*args, **kwargs)
-        # Apenas usuários que ainda não têm vínculo com aluno (ao editar, inclui o próprio usuário)
-        from .models import Aluno as AlunoModel
-        usuarios_com_aluno = list(AlunoModel.objects.values_list("user_id", flat=True))
-        if self.instance and self.instance.pk and self.instance.user_id:
-            usuarios_com_aluno = [pk for pk in usuarios_com_aluno if pk != self.instance.user_id]
-        self.fields["user"].queryset = User.objects.exclude(pk__in=usuarios_com_aluno).order_by("first_name", "username")
+        if user_preenchido_id:
+            # Fluxo vindo do cadastro de usuário: usuário já definido, campo oculto
+            self.fields["user"].widget = forms.HiddenInput()
+            self.fields["user"].initial = user_preenchido_id
+            self.fields["user"].queryset = User.objects.filter(pk=user_preenchido_id)
+        else:
+            # Apenas usuários que ainda não têm vínculo com aluno (ao editar, inclui o próprio usuário)
+            from .models import Aluno as AlunoModel
+            usuarios_com_aluno = list(AlunoModel.objects.values_list("user_id", flat=True))
+            if self.instance and self.instance.pk and self.instance.user_id:
+                usuarios_com_aluno = [pk for pk in usuarios_com_aluno if pk != self.instance.user_id]
+            self.fields["user"].queryset = User.objects.exclude(pk__in=usuarios_com_aluno).order_by("first_name", "username")

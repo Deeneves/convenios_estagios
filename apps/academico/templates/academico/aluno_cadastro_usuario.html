@@ -8,11 +8,7 @@
 </div>
 <h1 class="h2 mb-4"><i class="bi bi-person-badge me-2"></i>Cadastrar aluno</h1>
 
-{% if usuario_cadastrado %}
-<div class="alert alert-info mb-4" role="alert">
-    <i class="bi bi-person-check me-2"></i>Usuário <strong>{{ usuario_cadastrado.get_full_name|default:usuario_cadastrado.cpf }}</strong> (CPF {{ usuario_cadastrado.cpf }}) cadastrado. Preencha os dados do aluno abaixo.
-</div>
-{% endif %}
+<p class="text-muted mb-4">Primeiro cadastre o usuário que será vinculado ao aluno. Em seguida você preencherá os dados acadêmicos e de endereço.</p>
 
 <div class="card">
     <div class="card-body">
@@ -20,9 +16,6 @@
             {% csrf_token %}
             <div class="row">
                 {% for field in form %}
-                {% if field.is_hidden %}
-                {{ field }}
-                {% else %}
                 <div class="mb-3 col-md-6">
                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                     {{ field }}
@@ -31,11 +24,10 @@
                     {% endif %}
                     {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
                 </div>
-                {% endif %}
                 {% endfor %}
             </div>
             <div class="d-flex gap-2 pt-2">
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-primary">Salvar usuário e continuar</button>
                 <a href="{% url 'academico:aluno_list' %}" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
