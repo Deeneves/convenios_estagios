@@ -1,0 +1,19 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8000",
+  "backendAuthType": "basic token",
+  "backendUsername": "38864502874",
+  "backendPassword": "aninha2018",
+  "executionArgs": {
+    "projectName": "convenios_estagios",
+    "projectPath": "/Users/andreneves/Documents/GitHub/convenios_estagios",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-YlJ8MfiWWKDS9xd-FRt4Mx7FihqEH8G4cKFQMG2YHbuHI8q6WCtFddNqvxh2aRwWGunJTu0UD1pOKj64Q3UfYzkxJuiS5jWSqG6lrtLXdNnwG6SjSrZ3Xm3SElCm3QGnPMY"
+    }
+  },
+  "proxy": "http://c521daf1-fdae-4a94-858b-83402ab5ea04:111L4YE9KDX0PE7IKXAvOp6xYUA15fTy@tun.testsprite.com:8080"
+}

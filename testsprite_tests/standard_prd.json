@@ -1,0 +1,252 @@
+{
+  "meta": {
+    "project": "Convênios e Estágios",
+    "date": "2026-01-29",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "Aplicação web em Python/Django para gestão acadêmica, usuários e convênios com foco em estágios, oferecendo recursos para autenticação por CPF, gestão de faculdades, cursos, alunos e um módulo de contrapartida, com dashboards personalizados por perfil de usuário.",
+  "core_goals": [
+    "Permitir autenticação e controle de sessão baseada em papéis de usuário (diretor, administrativo, aluno, secretaria)",
+    "Gerenciar dados acadêmicos incluindo faculdades, cursos e alunos com funcionalidades CRUD completas",
+    "Prover dashboards personalizados para cada perfil de usuário para melhorar a experiência e controle de acesso",
+    "Oferecer paginação e busca eficiente nas listagens para manipulação fácil de registros",
+    "Facilitar o cadastro de alunos em duas etapas para vinculação precisa entre usuários e dados acadêmicos",
+    "Integrar um módulo de contrapartida para complementar a gestão acadêmica e de convênios"
+  ],
+  "key_features": [
+    "Autenticação por CPF com login, logout e redirecionamento para dashboards por perfil",
+    "Cadastro, edição, listagem e visualização detalhada de faculdades com busca por nome",
+    "Cadastro, edição, listagem e visualização detalhada de cursos vinculados a faculdades com busca por nome e faculdade",
+    "Gerenciamento de alunos com busca por nome, matrícula, curso e situação, incluindo cadastro em dois passos (usuário e aluno)",
+    "Dashboards específicos para os papéis: diretor, administrativo, aluno e secretaria",
+    "Página inicial e navegação do módulo de contrapartida",
+    "Uso de Tailwind CSS para interface responsiva e moderna, com templates server-side do Django",
+    "Administração via Django Admin para gerenciamento avançado"
+  ],
+  "user_flow_summary": [
+    "Usuário acessa a página de login e autentica-se usando CPF e senha",
+    "Após login, usuário é redirecionado ao dashboard correspondente ao seu perfil (diretor, administrativo, aluno ou secretaria)",
+    "Usuário acessa módulos acadêmicos para listar, buscar, criar, editar ou visualizar faculdades, cursos e alunos",
+    "Cadastros de alunos ocorrem em duas etapas para criação de usuário e vinculação ao registro do aluno",
+    "Usuário navega para o módulo de contrapartida para acessar informações específicas relacionadas",
+    "Usuário pode realizar logout para encerrar sessão e retornar à página de login"
+  ],
+  "validation_criteria": [
+    "Autenticação deve permitir login e logout corretos, redirecionando pelo perfil do usuário",
+    "Listagens devem suportar paginação e filtros de busca eficazes para faculdades, cursos e alunos",
+    "Formulários de cadastro e edição devem ser validados e gravar dados corretamente no banco",
+    "Cadastros de alunos precisam validar a criação correta do usuário e posterior vinculação ao registro de aluno",
+    "Dashboards devem renderizar conteúdo correto e personalizado segundo o papel do usuário",
+    "Módulo de contrapartida deve estar acessível e apresentar a página inicial corretamente",
+    "Interface usuário deve ser responsiva e consistente conforme padrões do Tailwind CSS e templates Django"
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "Python",
+      "Django",
+      "SQLite3",
+      "Tailwind CSS",
+      "HTML/Django Templates"
+    ],
+    "features": [
+      {
+        "name": "Autenticação e sessão",
+        "description": "Login, logout e home por perfil (diretor, administrativo, aluno, secretaria).",
+        "files": [
+          "apps/usuarios/views.py",
+          "apps/usuarios/urls.py",
+          "apps/usuarios/forms.py",
+          "templates/registration/login.html",
+          "templates/dashboard/diretor_home.html",
+          "templates/dashboard/administrativo_home.html",
+          "templates/dashboard/aluno_home.html",
+          "templates/dashboard/secretaria_home.html"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/": {
+              "get": {
+                "summary": "Login form"
+              },
+              "post": {
+                "summary": "Login (username, password, next)"
+              }
+            },
+            "/home/": {
+              "get": {
+                "summary": "Dashboard por perfil (requer autenticação)"
+              }
+            },
+            "/logout/": {
+              "get": {
+                "summary": "Logout e redireciona para login"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "CRUD Faculdade",
+        "description": "Listagem (com busca por nome), cadastro, edição e detalhe de faculdades.",
+        "files": [
+          "apps/academico/views.py",
+          "apps/academico/urls.py",
+          "apps/academico/forms.py",
+          "apps/academico/models.py",
+          "apps/academico/templates/academico/faculdade_list.html",
+          "apps/academico/templates/academico/faculdade_form.html",
+          "apps/academico/templates/academico/faculdade_detail.html"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/academico/faculdades/": {
+              "get": {
+                "summary": "Lista faculdades (query: q, page)"
+              },
+              "post": {
+                "summary": "Cria faculdade (form)"
+              }
+            },
+            "/academico/faculdades/cadastrar/": {
+              "get": {
+                "summary": "Formulário de cadastro"
+              }
+            },
+            "/academico/faculdades/{pk}/": {
+              "get": {
+                "summary": "Detalhe da faculdade"
+              }
+            },
+            "/academico/faculdades/{pk}/editar/": {
+              "get": {
+                "summary": "Formulário de edição"
+              },
+              "post": {
+                "summary": "Atualiza faculdade"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "CRUD Curso",
+        "description": "Listagem (busca por nome e faculdade), cadastro, edição e detalhe de cursos.",
+        "files": [
+          "apps/academico/views.py",
+          "apps/academico/urls.py",
+          "apps/academico/forms.py",
+          "apps/academico/models.py",
+          "apps/academico/templates/academico/curso_list.html",
+          "apps/academico/templates/academico/curso_form.html",
+          "apps/academico/templates/academico/curso_detail.html"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/academico/cursos/": {
+              "get": {
+                "summary": "Lista cursos (query: q, faculdade, page)"
+              },
+              "post": {
+                "summary": "Cria curso (form)"
+              }
+            },
+            "/academico/cursos/cadastrar/": {
+              "get": {
+                "summary": "Formulário de cadastro"
+              }
+            },
+            "/academico/cursos/{pk}/": {
+              "get": {
+                "summary": "Detalhe do curso"
+              }
+            },
+            "/academico/cursos/{pk}/editar/": {
+              "get": {
+                "summary": "Formulário de edição"
+              },
+              "post": {
+                "summary": "Atualiza curso"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "CRUD Aluno",
+        "description": "Listagem (busca por nome, matrícula, curso, situação), cadastro em dois passos (usuário + aluno), edição e detalhe.",
+        "files": [
+          "apps/academico/views.py",
+          "apps/academico/urls.py",
+          "apps/academico/forms.py",
+          "apps/academico/models.py",
+          "apps/usuarios/forms.py",
+          "apps/academico/templates/academico/aluno_list.html",
+          "apps/academico/templates/academico/aluno_form.html",
+          "apps/academico/templates/academico/aluno_detail.html",
+          "apps/academico/templates/academico/aluno_cadastro_usuario.html"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/academico/alunos/": {
+              "get": {
+                "summary": "Lista alunos (query: q, matricula, curso, situacao, page)"
+              }
+            },
+            "/academico/alunos/cadastrar/": {
+              "get": {
+                "summary": "Passo 1: formulário usuário"
+              },
+              "post": {
+                "summary": "Cria usuário e redireciona para passo 2"
+              }
+            },
+            "/academico/alunos/cadastrar/{user_id}/": {
+              "get": {
+                "summary": "Passo 2: formulário aluno"
+              },
+              "post": {
+                "summary": "Cria aluno vinculado ao usuário"
+              }
+            },
+            "/academico/alunos/{pk}/": {
+              "get": {
+                "summary": "Detalhe do aluno"
+              }
+            },
+            "/academico/alunos/{pk}/editar/": {
+              "get": {
+                "summary": "Formulário de edição"
+              },
+              "post": {
+                "summary": "Atualiza aluno"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Contrapartida",
+        "description": "Página inicial do módulo de contrapartida.",
+        "files": [
+          "apps/contrapartida/views.py",
+          "apps/contrapartida/urls.py",
+          "apps/contrapartida/templates/contrapartida/index.html"
+        ],
+        "api_doc": {
+          "openapi": "3.0.0",
+          "paths": {
+            "/contrapartida/": {
+              "get": {
+                "summary": "Página index contrapartida"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

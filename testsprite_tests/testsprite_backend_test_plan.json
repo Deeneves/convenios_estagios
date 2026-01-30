@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "loginformaccess",
+    "description": "Verify that the login form is accessible via GET request at the root endpoint '/' and renders correctly."
+  },
+  {
+    "id": "TC002",
+    "title": "userloginwithcpf",
+    "description": "Test user login functionality using CPF and password via POST request to '/' endpoint, including redirection to the appropriate dashboard based on user role."
+  },
+  {
+    "id": "TC003",
+    "title": "dashboardaccessbyauthenticateduser",
+    "description": "Ensure that authenticated users can access the dashboard at '/home/' endpoint and that the dashboard content is personalized according to the user's role."
+  },
+  {
+    "id": "TC004",
+    "title": "logoutfunctionality",
+    "description": "Verify that the logout endpoint '/logout/' properly logs out the user and redirects to the login page."
+  },
+  {
+    "id": "TC005",
+    "title": "listfaculdadeswithsearchandpagination",
+    "description": "Test listing of faculdades at '/academico/faculdades/' with query parameters for search by name and pagination, ensuring correct filtering and page navigation."
+  },
+  {
+    "id": "TC006",
+    "title": "createfaculdade",
+    "description": "Verify that a new faculdade can be created via POST request to '/academico/faculdades/' with valid form data and that the data is saved correctly."
+  },
+  {
+    "id": "TC007",
+    "title": "listcursoswithsearchfilters",
+    "description": "Test listing of cursos at '/academico/cursos/' with query parameters for search by name, faculdade, and pagination, ensuring correct filtering and page navigation."
+  },
+  {
+    "id": "TC008",
+    "title": "createcurso",
+    "description": "Verify that a new curso can be created via POST request to '/academico/cursos/' with valid form data and that the data is saved correctly."
+  },
+  {
+    "id": "TC009",
+    "title": "listalunoswithfiltersandpagination",
+    "description": "Test listing of alunos at '/academico/alunos/' with query parameters for search by name, matricula, curso, situacao, and pagination, ensuring correct filtering and page navigation."
+  },
+  {
+    "id": "TC010",
+    "title": "contrapartidapageaccess",
+    "description": "Verify that the contrapartida module index page is accessible via GET request to '/contrapartida/' and renders correctly."
+  }
+]

@@ -1,0 +1,141 @@
+{
+  "tech_stack": ["Python", "Django", "SQLite3", "Tailwind CSS", "HTML/Django Templates"],
+  "features": [
+    {
+      "name": "Autenticação e sessão",
+      "description": "Login, logout e home por perfil (diretor, administrativo, aluno, secretaria).",
+      "files": [
+        "apps/usuarios/views.py",
+        "apps/usuarios/urls.py",
+        "apps/usuarios/forms.py",
+        "templates/registration/login.html",
+        "templates/dashboard/diretor_home.html",
+        "templates/dashboard/administrativo_home.html",
+        "templates/dashboard/aluno_home.html",
+        "templates/dashboard/secretaria_home.html"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/": {
+            "get": { "summary": "Login form" },
+            "post": { "summary": "Login (username, password, next)" }
+          },
+          "/home/": {
+            "get": { "summary": "Dashboard por perfil (requer autenticação)" }
+          },
+          "/logout/": {
+            "get": { "summary": "Logout e redireciona para login" }
+          }
+        }
+      }
+    },
+    {
+      "name": "CRUD Faculdade",
+      "description": "Listagem (com busca por nome), cadastro, edição e detalhe de faculdades.",
+      "files": [
+        "apps/academico/views.py",
+        "apps/academico/urls.py",
+        "apps/academico/forms.py",
+        "apps/academico/models.py",
+        "apps/academico/templates/academico/faculdade_list.html",
+        "apps/academico/templates/academico/faculdade_form.html",
+        "apps/academico/templates/academico/faculdade_detail.html"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/academico/faculdades/": {
+            "get": { "summary": "Lista faculdades (query: q, page)" },
+            "post": { "summary": "Cria faculdade (form)" }
+          },
+          "/academico/faculdades/cadastrar/": { "get": { "summary": "Formulário de cadastro" } },
+          "/academico/faculdades/{pk}/": { "get": { "summary": "Detalhe da faculdade" } },
+          "/academico/faculdades/{pk}/editar/": {
+            "get": { "summary": "Formulário de edição" },
+            "post": { "summary": "Atualiza faculdade" }
+          }
+        }
+      }
+    },
+    {
+      "name": "CRUD Curso",
+      "description": "Listagem (busca por nome e faculdade), cadastro, edição e detalhe de cursos.",
+      "files": [
+        "apps/academico/views.py",
+        "apps/academico/urls.py",
+        "apps/academico/forms.py",
+        "apps/academico/models.py",
+        "apps/academico/templates/academico/curso_list.html",
+        "apps/academico/templates/academico/curso_form.html",
+        "apps/academico/templates/academico/curso_detail.html"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/academico/cursos/": {
+            "get": { "summary": "Lista cursos (query: q, faculdade, page)" },
+            "post": { "summary": "Cria curso (form)" }
+          },
+          "/academico/cursos/cadastrar/": { "get": { "summary": "Formulário de cadastro" } },
+          "/academico/cursos/{pk}/": { "get": { "summary": "Detalhe do curso" } },
+          "/academico/cursos/{pk}/editar/": {
+            "get": { "summary": "Formulário de edição" },
+            "post": { "summary": "Atualiza curso" }
+          }
+        }
+      }
+    },
+    {
+      "name": "CRUD Aluno",
+      "description": "Listagem (busca por nome, matrícula, curso, situação), cadastro em dois passos (usuário + aluno), edição e detalhe.",
+      "files": [
+        "apps/academico/views.py",
+        "apps/academico/urls.py",
+        "apps/academico/forms.py",
+        "apps/academico/models.py",
+        "apps/usuarios/forms.py",
+        "apps/academico/templates/academico/aluno_list.html",
+        "apps/academico/templates/academico/aluno_form.html",
+        "apps/academico/templates/academico/aluno_detail.html",
+        "apps/academico/templates/academico/aluno_cadastro_usuario.html"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/academico/alunos/": {
+            "get": { "summary": "Lista alunos (query: q, matricula, curso, situacao, page)" }
+          },
+          "/academico/alunos/cadastrar/": {
+            "get": { "summary": "Passo 1: formulário usuário" },
+            "post": { "summary": "Cria usuário e redireciona para passo 2" }
+          },
+          "/academico/alunos/cadastrar/{user_id}/": {
+            "get": { "summary": "Passo 2: formulário aluno" },
+            "post": { "summary": "Cria aluno vinculado ao usuário" }
+          },
+          "/academico/alunos/{pk}/": { "get": { "summary": "Detalhe do aluno" } },
+          "/academico/alunos/{pk}/editar/": {
+            "get": { "summary": "Formulário de edição" },
+            "post": { "summary": "Atualiza aluno" }
+          }
+        }
+      }
+    },
+    {
+      "name": "Contrapartida",
+      "description": "Página inicial do módulo de contrapartida.",
+      "files": [
+        "apps/contrapartida/views.py",
+        "apps/contrapartida/urls.py",
+        "apps/contrapartida/templates/contrapartida/index.html"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/contrapartida/": { "get": { "summary": "Página index contrapartida" } }
+        }
+      }
+    }
+  ]
+}
