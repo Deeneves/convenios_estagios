@@ -4,18 +4,21 @@ from django.contrib.auth.forms import AuthenticationForm
 
 User = get_user_model()
 
+# Classes Tailwind para os widgets
+TAILWIND_INPUT = "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+
 
 class UserCreateForm(forms.ModelForm):
     """Formulário para cadastro de usuário (usado no fluxo de cadastro de aluno)."""
 
     password1 = forms.CharField(
         label="Senha",
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Senha"}),
+        widget=forms.PasswordInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Senha"}),
         min_length=8,
     )
     password2 = forms.CharField(
         label="Confirmação de senha",
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Repita a senha"}),
+        widget=forms.PasswordInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Repita a senha"}),
         min_length=8,
     )
 
@@ -30,16 +33,16 @@ class UserCreateForm(forms.ModelForm):
         }
         widgets = {
             "cpf": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "CPF (apenas números)", "maxlength": "11"}
+                attrs={"class": TAILWIND_INPUT, "placeholder": "CPF (apenas números)", "maxlength": "11"}
             ),
             "first_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Nome"}
+                attrs={"class": TAILWIND_INPUT, "placeholder": "Nome"}
             ),
             "last_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Sobrenome"}
+                attrs={"class": TAILWIND_INPUT, "placeholder": "Sobrenome"}
             ),
             "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "E-mail"}
+                attrs={"class": TAILWIND_INPUT, "placeholder": "E-mail"}
             ),
         }
 
@@ -69,4 +72,6 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['placeholder'] = 'CPF'
+        self.fields['username'].widget.attrs['class'] = TAILWIND_INPUT
         self.fields['password'].widget.attrs['placeholder'] = 'Senha'
+        self.fields['password'].widget.attrs['class'] = TAILWIND_INPUT

@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Sistema de Convênios e Estágios - Estilos Complementares
+
+   Este arquivo contém estilos customizados que complementam o Tailwind CSS.
+   As classes utilitárias do Tailwind são usadas diretamente nos templates.
+   ========================================================================== */
+
+/* Transições suaves globais */
+*, *::before, *::after {
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Remove transição de propriedades que não devem ter */
+input, textarea, select {
+    transition-property: border-color, box-shadow;
+}
+
+/* Focus ring consistente */
+input:focus, textarea:focus, select:focus, button:focus {
+    outline: none;
+}
+
+/* Scrollbar customizada (webkit) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Tabelas - alinhamento vertical */
+table td, table th {
+    vertical-align: middle;
+}
+
+/* Animação de loading (spinner) */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Fade in animation para alertas */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Dropdown animation */
+@keyframes dropdownEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.dropdown-menu:not(.hidden) {
+    animation: dropdownEnter 0.15s ease-out;
+}
+
+/* Print styles */
+@media print {
+    nav, footer, .no-print {
+        display: none !important;
+    }
+
+    main {
+        padding: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb !important;
+    }
+}

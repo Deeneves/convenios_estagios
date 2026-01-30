@@ -20,3 +20,10 @@ venv/
 db.sqlite3
 .vscode/settings.json
 .vscode/
+
+# Node / Frontend
+node_modules/
+static/css/tailwind.css
+
+# Django staticfiles (collectstatic)
+staticfiles/

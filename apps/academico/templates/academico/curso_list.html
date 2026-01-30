@@ -3,35 +3,46 @@
 {% block title %}Cursos{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h2 mb-0"><i class="bi bi-book me-2"></i>Cursos</h1>
-    <a href="{% url 'academico:curso_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i>Cadastrar curso
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center mb-4 sm:mb-0">
+        <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
+        Cursos
+    </h1>
+    <a href="{% url 'academico:curso_create' %}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Cadastrar curso
     </a>
 </div>
 
-<div class="card">
-    <div class="card-body">
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
         {% if cursos %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th>Nome</th>
-                        <th>Faculdade</th>
-                        <th>Duração</th>
-                        <th width="120" class="text-end">Ações</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Faculdade</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duração</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     {% for curso in cursos %}
-                    <tr>
-                        <td>{{ curso.nome }}</td>
-                        <td>{{ curso.faculdade.nome }}</td>
-                        <td>{{ curso.duracao }} semestres</td>
-                        <td class="text-end">
-                            <a href="{% url 'academico:curso_detail' curso.pk %}" class="btn btn-sm btn-outline-primary" title="Visualizar">
-                                <i class="bi bi-eye"></i>
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ curso.nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ curso.faculdade.nome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ curso.duracao }} semestres</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                            <a href="{% url 'academico:curso_detail' curso.pk %}" class="inline-flex items-center px-3 py-1.5 border border-primary-600 text-primary-600 text-sm font-medium rounded-md hover:bg-primary-50 transition-colors" title="Visualizar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
                             </a>
                         </td>
                     </tr>
@@ -43,7 +54,7 @@
         {% include 'includes/pagination.html' with page_obj=page_obj %}
         {% endif %}
         {% else %}
-        <p class="text-muted mb-0">Nenhum curso cadastrado. <a href="{% url 'academico:curso_create' %}">Cadastrar o primeiro</a>.</p>
+        <p class="text-gray-500">Nenhum curso cadastrado. <a href="{% url 'academico:curso_create' %}" class="text-primary-600 hover:text-primary-700 hover:underline">Cadastrar o primeiro</a>.</p>
         {% endif %}
     </div>
 </div>

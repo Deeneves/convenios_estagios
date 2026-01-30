@@ -3,22 +3,28 @@
 {% block title %}Início{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="text-center py-5">
-            <h1 class="display-5 fw-bold text-primary mb-3">
-                <i class="bi bi-journal-check"></i> Convênios e Estágios
+<div class="flex justify-center">
+    <div class="max-w-3xl w-full">
+        <div class="text-center py-12">
+            <h1 class="text-4xl font-bold text-primary-600 mb-4 flex items-center justify-center">
+                <svg class="w-10 h-10 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+                Convênios e Estágios
             </h1>
-            <p class="lead text-muted">
+            <p class="text-lg text-gray-500 mb-6">
                 Sistema de gestão de convênios e estágios acadêmicos.
             </p>
             {% if not user.is_authenticated %}
-            <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no sistema
+            <a href="{% url 'login' %}" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                </svg>
+                Entrar no sistema
             </a>
             {% else %}
-            <p class="text-muted mt-3">
-                Olá, <strong>{{ user.get_full_name|default:user.username }}</strong>. Use o menu acima para navegar.
+            <p class="text-gray-500 mt-4">
+                Olá, <strong class="text-gray-700">{{ user.get_full_name|default:user.username }}</strong>. Use o menu acima para navegar.
             </p>
             {% endif %}
         </div>

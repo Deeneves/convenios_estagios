@@ -4,15 +4,26 @@
 
 {% block content %}
 <div class="mb-4">
-    <a href="{% url 'academico:faculdade_list' %}" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+    <a href="{% url 'academico:faculdade_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 hover:underline">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Voltar
+    </a>
 </div>
-<h1 class="h2 mb-4"><i class="bi bi-building me-2"></i>{{ faculdade.nome }}</h1>
 
-<div class="card">
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Nome</dt>
-            <dd class="col-sm-9">{{ faculdade.nome }}</dd>
+<h1 class="text-2xl font-bold text-gray-900 flex items-center mb-6">
+    <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+    </svg>
+    {{ faculdade.nome }}
+</h1>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <dt class="text-sm font-medium text-gray-500">Nome</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ faculdade.nome }}</dd>
         </dl>
     </div>
 </div>

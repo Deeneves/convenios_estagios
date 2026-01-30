@@ -4,50 +4,80 @@
 
 {% block content %}
 <div class="mb-4">
-    <a href="{% url 'academico:aluno_list' %}" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+    <a href="{% url 'academico:aluno_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 hover:underline">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Voltar
+    </a>
 </div>
-<h1 class="h2 mb-4"><i class="bi bi-person-badge me-2"></i>{{ aluno.user.get_full_name|default:aluno.user.username }}</h1>
 
-<div class="card mb-3">
-    <div class="card-header">Dados acadêmicos</div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Matrícula</dt>
-            <dd class="col-sm-9">{{ aluno.matricula|default:"—" }}</dd>
-            <dt class="col-sm-3">Curso</dt>
-            <dd class="col-sm-9">{{ aluno.curso.nome|default:"—" }}</dd>
-            <dt class="col-sm-3">Situação</dt>
-            <dd class="col-sm-9">{{ aluno.get_situacao_display }}</dd>
+<h1 class="text-2xl font-bold text-gray-900 flex items-center mb-6">
+    <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+    </svg>
+    {{ aluno.user.get_full_name|default:aluno.user.username }}
+</h1>
+
+<!-- Dados acadêmicos -->
+<div class="bg-white shadow-md rounded-lg overflow-hidden mb-4">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Dados acadêmicos</h2>
+    </div>
+    <div class="p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <dt class="text-sm font-medium text-gray-500">Matrícula</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.matricula|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Curso</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.curso.nome|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Situação</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.get_situacao_display }}</dd>
         </dl>
     </div>
 </div>
-<div class="card mb-3">
-    <div class="card-header">Dados pessoais</div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Data de nascimento</dt>
-            <dd class="col-sm-9">{{ aluno.data_nascimento|date:"d/m/Y"|default:"—" }}</dd>
-            <dt class="col-sm-3">RG</dt>
-            <dd class="col-sm-9">{{ aluno.rg|default:"—" }}</dd>
-            <dt class="col-sm-3">CPF</dt>
-            <dd class="col-sm-9">{{ aluno.user.cpf|default:"—" }}</dd>
-            <dt class="col-sm-3">Estado civil</dt>
-            <dd class="col-sm-9">{{ aluno.get_estado_civil_display|default:"—" }}</dd>
+
+<!-- Dados pessoais -->
+<div class="bg-white shadow-md rounded-lg overflow-hidden mb-4">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Dados pessoais</h2>
+    </div>
+    <div class="p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <dt class="text-sm font-medium text-gray-500">Data de nascimento</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.data_nascimento|date:"d/m/Y"|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">RG</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.rg|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">CPF</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.user.cpf|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Estado civil</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.get_estado_civil_display|default:"—" }}</dd>
         </dl>
     </div>
 </div>
-<div class="card">
-    <div class="card-header">Endereço</div>
-    <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Logradouro</dt>
-            <dd class="col-sm-9">{{ aluno.logradouro|default:"—" }}{% if aluno.numero %}, {{ aluno.numero }}{% endif %}{% if aluno.complemento %} — {{ aluno.complemento }}{% endif %}</dd>
-            <dt class="col-sm-3">Bairro</dt>
-            <dd class="col-sm-9">{{ aluno.bairro|default:"—" }}</dd>
-            <dt class="col-sm-3">Cidade / Estado</dt>
-            <dd class="col-sm-9">{{ aluno.cidade|default:"—" }}{% if aluno.estado %} / {{ aluno.estado }}{% endif %}</dd>
-            <dt class="col-sm-3">CEP</dt>
-            <dd class="col-sm-9">{{ aluno.cep|default:"—" }}</dd>
+
+<!-- Endereço -->
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Endereço</h2>
+    </div>
+    <div class="p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <dt class="text-sm font-medium text-gray-500">Logradouro</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.logradouro|default:"—" }}{% if aluno.numero %}, {{ aluno.numero }}{% endif %}{% if aluno.complemento %} — {{ aluno.complemento }}{% endif %}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Bairro</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.bairro|default:"—" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Cidade / Estado</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.cidade|default:"—" }}{% if aluno.estado %} / {{ aluno.estado }}{% endif %}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">CEP</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.cep|default:"—" }}</dd>
         </dl>
     </div>
 </div>
