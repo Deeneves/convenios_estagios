@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Início{% endblock %}
 
@@ -40,7 +41,32 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-10 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800">Alunos por curso</h2>
+                        <p class="text-sm text-gray-500">Distribuição do número de alunos por curso.</p>
+                    </div>
+                </div>
+                {% if cursos_labels %}
+                    <div class="w-full min-h-[320px]">
+                        <div id="alunosPorCursoChart" class="w-full"></div>
+                    </div>
+                    {{ cursos_labels|json_script:"cursos-labels" }}
+                    {{ cursos_values|json_script:"cursos-values" }}
+                {% else %}
+                    <div class="text-sm text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-xl p-6 text-center">
+                        Nenhum curso cadastrado para exibir no gráfico.
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.1"></script>
+    <script src="{% static 'js/diretor_home.js' %}"></script>
 {% endblock %}

@@ -5,6 +5,8 @@ from .forms import LoginForm
 from .models import User
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from django.db.models import Count
+
 from apps.academico.models import Aluno, Curso, Faculdade
 
 def login(request):
@@ -34,10 +36,16 @@ def home(request):
     template = role_template.get(request.user.role, 'dashboard/aluno_home.html')
     context = {}
     if request.user.role == User.Role.DIRETOR:
+        cursos = (
+            Curso.objects.annotate(alunos_total=Count("alunos"))
+            .order_by("nome")
+        )
         context = {
             "alunos_count": Aluno.objects.count(),
             "cursos_count": Curso.objects.count(),
             "faculdades_count": Faculdade.objects.count(),
+            "cursos_labels": [curso.nome for curso in cursos],
+            "cursos_values": [curso.alunos_total for curso in cursos],
         }
     return render(request, template, context)
 
