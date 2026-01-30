@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+from urllib.parse import urlencode
 
 from .forms import AlunoForm, CursoForm, FaculdadeForm
 from .models import Aluno, Curso, Faculdade
@@ -59,6 +61,37 @@ class AlunoListView(LoginRequiredMixin, ListView):
     context_object_name = "alunos"
     template_name = "academico/aluno_list.html"
     paginate_by = 15
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related("user", "curso")
+        q = self.request.GET.get("q", "").strip()
+        matricula = self.request.GET.get("matricula", "").strip()
+        curso = self.request.GET.get("curso", "").strip()
+        situacao = self.request.GET.get("situacao", "").strip()
+
+        if q:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=q)
+                | Q(user__last_name__icontains=q)
+                | Q(user__cpf__icontains=q)
+                | Q(user__username__icontains=q)
+            )
+        if matricula:
+            queryset = queryset.filter(matricula__icontains=matricula)
+        if curso:
+            queryset = queryset.filter(curso_id=curso)
+        if situacao:
+            queryset = queryset.filter(situacao=situacao)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["querystring"] = urlencode(query_params)
+        context["cursos"] = Curso.objects.all()
+        context["situacoes"] = Aluno.Situacao.choices
+        return context
 
 
 class AlunoCadastroUsuarioView(LoginRequiredMixin, FormView):
