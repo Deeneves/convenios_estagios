@@ -20,6 +20,7 @@ venv/
 db.sqlite3
 .vscode/settings.json
 .vscode/
+.cursor/
 
 # Node / Frontend
 node_modules/
