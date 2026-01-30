@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
+from .models import User
 from django.utils.http import url_has_allowed_host_and_scheme
 
 def login(request):
@@ -22,7 +23,14 @@ def login(request):
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    role_template = {
+        User.Role.DIRETOR: 'dashboard/diretor_home.html',
+        User.Role.ADMINISTRATIVO: 'dashboard/administrativo_home.html',
+        User.Role.ALUNO: 'dashboard/aluno_home.html',
+        User.Role.SECRETARIA: 'dashboard/secretaria_home.html',
+    }
+    template = role_template.get(request.user.role, 'dashboard/aluno_home.html')
+    return render(request, template)
 
 @login_required
 def logout(request):
