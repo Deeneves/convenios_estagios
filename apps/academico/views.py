@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, ListView
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from .forms import AlunoForm, CursoForm, FaculdadeForm
 from .models import Aluno, Curso, Faculdade
@@ -122,3 +122,10 @@ class AlunoDetailView(LoginRequiredMixin, DetailView):
     model = Aluno
     context_object_name = "aluno"
     template_name = "academico/aluno_detail.html"
+
+
+class AlunoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Aluno
+    form_class = AlunoForm
+    template_name = "academico/aluno_form.html"
+    success_url = reverse_lazy("academico:aluno_list")
