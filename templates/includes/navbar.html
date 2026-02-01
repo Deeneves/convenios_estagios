@@ -67,10 +67,25 @@
                 {% endif %}
 
                 {% if user.is_authenticated and user.is_staff %}
-                <a href="{% url 'admin:index' %}" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                    <i data-lucide="settings" class="w-4 h-4 mr-1"></i>
-                    Administração
-                </a>
+                <div class="relative">
+                    <button onclick="toggleDropdown('administracao-dropdown')" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                        <i data-lucide="settings" class="w-5 h-5 mr-1"></i>
+                        Administração
+                        <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
+                    </button>
+                    <div id="administracao-dropdown" data-dropdown class="dropdown-menu hidden absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                        <div class="py-1">
+                            <a href="{% url 'user_admin_list' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="users" class="w-4 h-4 mr-2 text-gray-500"></i>
+                                Usuários
+                            </a>
+                            <a href="{% url 'admin:index' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="layout-dashboard" class="w-4 h-4 mr-2 text-gray-500"></i>
+                                Painel Admin
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
 
                 <!-- User Menu -->
@@ -149,9 +164,15 @@
             {% endif %}
 
             {% if user.is_authenticated and user.is_staff %}
-            <a href="{% url 'admin:index' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
-                Administração
-            </a>
+            <div class="border-t border-primary-500 pt-2 mt-2">
+                <p class="px-3 py-1 text-primary-200 text-xs uppercase tracking-wider">Administração</p>
+                <a href="{% url 'user_admin_list' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
+                    Usuários
+                </a>
+                <a href="{% url 'admin:index' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
+                    Painel Admin
+                </a>
+            </div>
             {% endif %}
 
             <div class="border-t border-primary-500 pt-2 mt-2">

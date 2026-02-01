@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuários{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center mb-4 sm:mb-0">
+        <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+        Usuários
+    </h1>
+    <a href="{% url 'user_admin_create' %}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Cadastrar usuário
+    </a>
+</div>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+    <div class="p-6">
+        <form method="get" class="flex flex-col md:flex-row md:flex-wrap md:items-end gap-4">
+            <div class="w-full md:w-72">
+                <label for="f-q" class="block text-sm font-medium text-gray-700 mb-1">Nome, CPF ou e-mail</label>
+                <input id="f-q" type="text" name="q" value="{{ request.GET.q|default_if_none:'' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="Nome, CPF ou e-mail">
+            </div>
+            <div class="w-full md:w-56">
+                <label for="f-role" class="block text-sm font-medium text-gray-700 mb-1">Perfil</label>
+                <select id="f-role" name="role" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <option value="">Todos</option>
+                    {% for value, label in roles %}
+                    <option value="{{ value }}" {% if request.GET.role == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="w-full md:w-auto flex items-center gap-3 md:ml-auto">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                    Filtrar
+                </button>
+                <a href="{% url 'user_admin_list' %}" class="text-sm text-gray-600 hover:text-gray-900 hover:underline">Limpar filtros</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+        {% if users %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuário</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPF</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perfil</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ativo</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 210px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for user_item in users %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user_item.get_full_name|default:user_item.cpf }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user_item.cpf }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user_item.email|default:"—" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user_item.get_role_display }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <form method="post" action="{% url 'user_admin_toggle_active' user_item.pk %}">
+                                {% csrf_token %}
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" {% if user_item.is_active %}checked{% endif %} onchange="this.form.submit()">
+                                    <span class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:bg-primary-600 relative transition-colors">
+                                        <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5"></span>
+                                    </span>
+                                </label>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                            <a href="{% url 'user_admin_edit' user_item.pk %}" class="inline-flex items-center px-3 py-1.5 border border-amber-500 text-amber-600 text-sm font-medium rounded-md hover:bg-amber-50 transition-colors mr-2" title="Editar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'user_admin_detail' user_item.pk %}" class="inline-flex items-center px-3 py-1.5 border border-primary-600 text-primary-600 text-sm font-medium rounded-md hover:bg-primary-50 transition-colors mr-2" title="Detalhar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        {% if request.GET.q or request.GET.role %}
+        <p class="text-gray-500">Nenhum usuário encontrado com os filtros aplicados. <a href="{% url 'user_admin_list' %}" class="text-primary-600 hover:text-primary-700 hover:underline">Limpar filtros</a>.</p>
+        {% else %}
+        <p class="text-gray-500">Nenhum usuário cadastrado. <a href="{% url 'user_admin_create' %}" class="text-primary-600 hover:text-primary-700 hover:underline">Cadastrar o primeiro</a>.</p>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

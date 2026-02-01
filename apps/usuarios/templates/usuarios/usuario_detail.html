@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhar usuário{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'user_admin_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 hover:underline">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Voltar
+    </a>
+</div>
+
+<h1 class="text-2xl font-bold text-gray-900 flex items-center mb-6">
+    <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+    </svg>
+    Detalhar usuário
+</h1>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Nome</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ user_item.get_full_name|default:"—" }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">CPF</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ user_item.cpf }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">E-mail</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ user_item.email|default:"—" }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Perfil</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ user_item.get_role_display }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Status</dt>
+                <dd class="mt-1 text-sm text-gray-900">{% if user_item.is_active %}Ativo{% else %}Inativo{% endif %}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Data de cadastro</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ user_item.date_joined|date:"d/m/Y H:i" }}</dd>
+            </div>
+        </dl>
+        <div class="flex items-center gap-3 pt-6">
+            <a href="{% url 'user_admin_edit' user_item.pk %}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                Editar usuário
+            </a>
+            <a href="{% url 'user_admin_list' %}" class="inline-flex items-center px-4 py-2 bg-white text-gray-700 font-medium rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
