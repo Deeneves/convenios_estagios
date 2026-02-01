@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load formatters %}
+{% load l10n %}
 
 {% block title %}Horas do aluno{% endblock %}
 
@@ -35,6 +36,31 @@
             <dt class="text-sm font-medium text-gray-500">Curso</dt>
             <dd class="text-sm text-gray-900 sm:col-span-2">{{ aluno.curso.nome|default:"—" }}</dd>
         </dl>
+    </div>
+</div>
+{% endif %}
+
+{% if progresso_horas %}
+<div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Progresso anual (100h/ano)</h2>
+    </div>
+    <div class="p-6 space-y-4">
+        <div class="text-sm text-gray-700 mb-2">
+            Total realizado: <strong>{{ total_horas|floatformat:1 }}h</strong> ·
+            Total necessário: <strong>{{ total_necessario|floatformat:0 }}h</strong> ·
+            Restante: <strong>{{ total_restante|floatformat:1 }}h</strong>
+        </div>
+        {% for item in progresso_horas %}
+        <div>
+            <div class="flex items-center justify-between text-sm text-gray-700 mb-1">
+                <span>Ano {{ item.ano }}</span>
+                <span>{{ item.feito|floatformat:1 }}h / 100h</span>
+            </div>
+            <progress class="w-full h-3 rounded" value="{{ item.feito|unlocalize }}" max="100"></progress>
+            <div class="text-xs text-gray-500 mt-1">Faltam {{ item.falta|floatformat:1 }}h</div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endif %}

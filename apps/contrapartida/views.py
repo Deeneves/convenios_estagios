@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import timedelta
+import math
 
 from django.db.models import DurationField, Q, Sum, Value
 from django.db.models.functions import Coalesce
@@ -201,7 +202,38 @@ class HorasAlunoListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         aluno_id = self.kwargs.get("aluno_id")
-        context["aluno"] = Aluno.objects.select_related("user", "curso").filter(pk=aluno_id).first()
+        aluno = Aluno.objects.select_related("user", "curso").filter(pk=aluno_id).first()
+        context["aluno"] = aluno
+        total = self.get_queryset().aggregate(
+            total=Coalesce(
+                Sum("quantidade", output_field=DurationField()),
+                Value(timedelta(0), output_field=DurationField()),
+                output_field=DurationField(),
+            )
+        )
+        total_td = total["total"] or timedelta(0)
+        total_horas = total_td.total_seconds() / 3600
+        anos = 0
+        if aluno and aluno.curso and aluno.curso.duracao:
+            anos = math.ceil(aluno.curso.duracao / 2)
+        progresso = []
+        restante = total_horas
+        for ano in range(1, anos + 1):
+            feito = min(100, restante)
+            restante = max(0, restante - feito)
+            falta = max(0, 100 - feito)
+            progresso.append(
+                {
+                    "ano": ano,
+                    "feito": feito,
+                    "falta": falta,
+                    "percentual": min(100, (feito / 100) * 100 if 100 else 0),
+                }
+            )
+        context["progresso_horas"] = progresso
+        context["total_horas"] = total_horas
+        context["total_necessario"] = anos * 100
+        context["total_restante"] = max(0, (anos * 100) - total_horas)
         return context
 
 
