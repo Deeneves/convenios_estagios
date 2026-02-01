@@ -142,6 +142,31 @@ input:focus, textarea:focus, select:focus, button:focus {
     outline: none;
 }
 
+/* Modal básico */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 50;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+.btn-danger:focus {
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.4);
+}
+
 /* Scrollbar customizada (webkit) */
 ::-webkit-scrollbar {
     width: 8px;
