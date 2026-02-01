@@ -18,6 +18,7 @@ class EncaminhamentoAdmin(admin.ModelAdmin):
     autocomplete_fields = ("secretaria",)
     date_hierarchy = "data"
     ordering = ("-numero",)
+    readonly_fields = ("numero",)
 
 
 @admin.register(Horas)

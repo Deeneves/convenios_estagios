@@ -31,13 +31,19 @@ class Encaminhamento(models.Model):
     def __str__(self):
         return f"{self.numero} - {self.aluno.user.first_name} {self.aluno.user.last_name} - {self.secretaria.sigla}"
 
+    def save(self, *args, **kwargs):
+        if not self.numero:
+            ultimo = Encaminhamento.objects.order_by("-numero").values_list("numero", flat=True).first()
+            self.numero = (ultimo or 0) + 1
+        super().save(*args, **kwargs)
+
 #Modelo Horas
 class Horas(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, related_name="horas", verbose_name="Aluno")
     quantidade = models.DurationField(verbose_name="Quantidade de horas")
     data_registro = models.DateField(verbose_name="Data de registro")
     oficio_informacao = models.CharField(max_length=200, verbose_name="Ofício de informação")
-    oficio_documento = models.FileField(upload_to="oficios/", verbose_name="Ofício de documento")
+    oficio_documento = models.FileField(upload_to="oficios/", verbose_name="Ofício de documento", blank=True, null=True)
     responsavel_registro = models.ForeignKey(User, on_delete=models.CASCADE, related_name="horas_registro", verbose_name="Responsável pelo registro")
 
     class Meta:

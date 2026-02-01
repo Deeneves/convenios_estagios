@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Encaminhamento {{ encaminhamento.numero }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'contrapartida:encaminhamento_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 hover:underline">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Voltar
+    </a>
+</div>
+
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+        <svg class="w-7 h-7 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 9H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"/>
+        </svg>
+        Encaminhamento {{ encaminhamento.numero }}
+    </h1>
+    <div class="flex flex-wrap gap-2">
+        <a href="{% url 'contrapartida:encaminhamento_edit' encaminhamento.pk %}" class="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-medium rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Editar
+        </a>
+        <a href="{% url 'contrapartida:encaminhamento_delete' encaminhamento.pk %}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7h12M9 7v10m6-10v10M10 4h4m-7 3v12a2 2 0 002 2h6a2 2 0 002-2V7"/>
+            </svg>
+            Excluir
+        </a>
+    </div>
+</div>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <dt class="text-sm font-medium text-gray-500">Número</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ encaminhamento.numero }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Aluno</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ encaminhamento.aluno.user.get_full_name|default:encaminhamento.aluno.user.username }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Secretaria</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ encaminhamento.secretaria.nome }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Data</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ encaminhamento.data|date:"d/m/Y" }}</dd>
+
+            <dt class="text-sm font-medium text-gray-500">Responsável pela emissão</dt>
+            <dd class="text-sm text-gray-900 sm:col-span-2">{{ encaminhamento.responsavel_emissao.get_full_name|default:encaminhamento.responsavel_emissao.username }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

@@ -39,6 +39,31 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Dropdown Contrapartida -->
+                <div class="relative">
+                    <button onclick="toggleDropdown('contrapartida-dropdown')" class="text-white hover:bg-primary-700 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                        <i data-lucide="briefcase" class="w-5 h-5 mr-1"></i>
+                        Contrapartida
+                        <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
+                    </button>
+                    <div id="contrapartida-dropdown" data-dropdown class="dropdown-menu hidden absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                        <div class="py-1">
+                            <a href="{% url 'contrapartida:secretaria_list' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="landmark" class="w-4 h-4 mr-2 text-gray-500"></i>
+                                Secretaria
+                            </a>
+                            <a href="{% url 'contrapartida:encaminhamento_list' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="send" class="w-4 h-4 mr-2 text-gray-500"></i>
+                                Encaminhamento
+                            </a>
+                            <a href="{% url 'contrapartida:horas_list' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="clock" class="w-4 h-4 mr-2 text-gray-500"></i>
+                                Horas
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
 
                 {% if user.is_authenticated and user.is_staff %}
@@ -106,6 +131,19 @@
                 </a>
                 <a href="{% url 'academico:aluno_list' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
                     Alunos
+                </a>
+            </div>
+
+            <div class="border-t border-primary-500 pt-2 mt-2">
+                <p class="px-3 py-1 text-primary-200 text-xs uppercase tracking-wider">Contrapartida</p>
+                <a href="{% url 'contrapartida:secretaria_list' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
+                    Secretaria
+                </a>
+                <a href="{% url 'contrapartida:encaminhamento_list' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
+                    Encaminhamento
+                </a>
+                <a href="{% url 'contrapartida:horas_list' %}" class="text-white hover:bg-primary-800 block px-3 py-2 rounded-md text-base font-medium">
+                    Horas
                 </a>
             </div>
             {% endif %}
