@@ -19,6 +19,7 @@ urlpatterns = [
     # Horas
     path("horas/", views.HorasListView.as_view(), name="horas_list"),
     path("horas/cadastrar/", views.HorasCreateView.as_view(), name="horas_create"),
+    path("horas/aluno/<int:aluno_id>/", views.HorasAlunoListView.as_view(), name="horas_aluno_list"),
     path("horas/<int:pk>/", views.HorasDetailView.as_view(), name="horas_detail"),
     path("horas/<int:pk>/editar/", views.HorasUpdateView.as_view(), name="horas_edit"),
     path("horas/<int:pk>/excluir/", views.HorasDeleteView.as_view(), name="horas_delete"),

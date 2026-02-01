@@ -1,5 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from datetime import timedelta
+
+from django.db.models import DurationField, Q, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse_lazy
@@ -7,7 +10,6 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from urllib.parse import urlencode
 
 from apps.academico.models import Aluno
-from apps.usuarios.models import User
 from .forms import EncaminhamentoForm, HorasForm, SecretariaForm
 from .models import Encaminhamento, Horas, Secretaria
 
@@ -127,22 +129,30 @@ class EncaminhamentoDeleteView(LoginRequiredMixin, DeleteView):
 
 # --- Horas ---
 class HorasListView(LoginRequiredMixin, ListView):
-    model = Horas
-    context_object_name = "horas"
+    model = Aluno
+    context_object_name = "alunos_totais"
     template_name = "contrapartida/horas_list.html"
     paginate_by = 15
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related("aluno", "responsavel_registro", "aluno__user")
+        queryset = (
+            super()
+            .get_queryset()
+            .select_related("user", "curso")
+            .annotate(
+                total_horas=Coalesce(
+                    Sum("horas__quantidade", output_field=DurationField()),
+                    Value(timedelta(0), output_field=DurationField()),
+                    output_field=DurationField(),
+                )
+            )
+        )
         aluno = self.request.GET.get("aluno", "").strip()
-        responsavel = self.request.GET.get("responsavel", "").strip()
-        data = self.request.GET.get("data_registro", "").strip()
+        curso = self.request.GET.get("curso", "").strip()
         if aluno:
-            queryset = queryset.filter(aluno_id=aluno)
-        if responsavel:
-            queryset = queryset.filter(responsavel_registro_id=responsavel)
-        if data:
-            queryset = queryset.filter(data_registro=data)
+            queryset = queryset.filter(pk=aluno)
+        if curso:
+            queryset = queryset.filter(curso_id=curso)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -151,7 +161,7 @@ class HorasListView(LoginRequiredMixin, ListView):
         query_params.pop("page", None)
         context["querystring"] = urlencode(query_params)
         context["alunos"] = Aluno.objects.select_related("user").order_by("user__first_name", "user__username")
-        context["responsaveis"] = User.objects.order_by("first_name", "username")
+        context["cursos"] = Aluno.objects.select_related("curso").values("curso_id", "curso__nome").distinct().order_by("curso__nome")
         return context
 
 
@@ -171,6 +181,28 @@ class HorasDetailView(LoginRequiredMixin, DetailView):
     model = Horas
     context_object_name = "registro_horas"
     template_name = "contrapartida/horas_detail.html"
+
+
+class HorasAlunoListView(LoginRequiredMixin, ListView):
+    model = Horas
+    context_object_name = "registros"
+    template_name = "contrapartida/horas_aluno_list.html"
+    paginate_by = 15
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("aluno", "aluno__user", "responsavel_registro")
+            .filter(aluno_id=self.kwargs.get("aluno_id"))
+            .order_by("-data_registro")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        aluno_id = self.kwargs.get("aluno_id")
+        context["aluno"] = Aluno.objects.select_related("user", "curso").filter(pk=aluno_id).first()
+        return context
 
 
 class HorasUpdateView(LoginRequiredMixin, UpdateView):
