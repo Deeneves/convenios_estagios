@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from datetime import timedelta
+
+from django.db.models import DurationField, Q, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
@@ -201,6 +204,22 @@ class AlunoDetailView(LoginRequiredMixin, DetailView):
     model = Aluno
     context_object_name = "aluno"
     template_name = "academico/aluno_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        aluno = context["aluno"]
+        context["encaminhamentos"] = aluno.encaminhamentos.select_related(
+            "secretaria", "responsavel_emissao"
+        ).order_by("-data", "-numero")
+        total = aluno.horas.aggregate(
+            total=Coalesce(
+                Sum("quantidade", output_field=DurationField()),
+                Value(timedelta(0), output_field=DurationField()),
+                output_field=DurationField(),
+            )
+        )
+        context["total_horas"] = total["total"]
+        return context
 
 
 class AlunoUpdateView(LoginRequiredMixin, UpdateView):
