@@ -149,9 +149,17 @@ class HorasListView(LoginRequiredMixin, ListView):
             )
         )
         aluno = self.request.GET.get("aluno", "").strip()
+        matricula = self.request.GET.get("matricula", "").strip()
         curso = self.request.GET.get("curso", "").strip()
         if aluno:
-            queryset = queryset.filter(pk=aluno)
+            for termo in aluno.split():
+                queryset = queryset.filter(
+                    Q(user__first_name__icontains=termo)
+                    | Q(user__last_name__icontains=termo)
+                    | Q(user__username__icontains=termo)
+                )
+        if matricula:
+            queryset = queryset.filter(matricula__icontains=matricula)
         if curso:
             queryset = queryset.filter(curso_id=curso)
         return queryset
