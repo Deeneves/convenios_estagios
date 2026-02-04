@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.academico',
     'apps.contrapartida',
     'apps.usuarios',
+    'apps.relatorios',
 ]
 
 MIDDLEWARE = [
