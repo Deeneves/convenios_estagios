@@ -50,6 +50,10 @@ class Aluno(models.Model):
         ATIVO = "ATIVO", "Ativo"
         INATIVO = "INATIVO", "Inativo"
 
+    class Sexo(models.TextChoices):
+        MASCULINO = "MASCULINO", "Masculino"
+        FEMININO = "FEMININO", "Feminino"
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -139,6 +143,25 @@ class Aluno(models.Model):
     cep = models.CharField(
         max_length=9,
         verbose_name="CEP",
+        null=True,
+        blank=True,
+    )
+    telefone = models.CharField(
+        max_length=20,
+        verbose_name="Telefone",
+        null=True,
+        blank=True,
+    )
+    celular = models.CharField(
+        max_length=20,
+        verbose_name="Celular",
+        null=True,
+        blank=True,
+    )
+    sexo = models.CharField(
+        max_length=10,
+        choices=Sexo.choices,
+        verbose_name="Sexo",
         null=True,
         blank=True,
     )
