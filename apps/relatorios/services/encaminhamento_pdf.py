@@ -231,7 +231,20 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements.append(t6)
     elements.append(Spacer(1, 0.12 * cm))
 
-    # 3. Tabela de horas (antes do título "Relatório...")
+    # 3. Título da seção de horas e tabela
+    elements.append(
+        Paragraph(
+            "Relatório de Horas Cumpridas pelo(a) Bolsista",
+            ParagraphStyle(
+                name="H", 
+                fontSize=8, 
+                fontName="Helvetica-Bold",
+                alignment=1  # 1 = TA_CENTER in ReportLab
+            ),
+        )
+    )
+    elements.append(Spacer(1, 0.08 * cm))
+
     dados_horas = [
         ["Ano", "1º ANO", "2º ANO", "3º ANO", "4º ANO", "TOTAL", "MÉDIA"],
         ["Qtd. Horas", h1, h2, h3, h4, h_total, h_media],
@@ -258,16 +271,7 @@ def gerar_pdf_encaminhamento(encaminhamento):
         )
     )
     elements.append(t_horas)
-    elements.append(Spacer(1, 0.08 * cm))
-
-    # Título da seção de horas (após a tabela, como no referência)
-    elements.append(
-        Paragraph(
-            "Relatório de Horas Cumpridas pelo(a) Bolsista",
-            ParagraphStyle(name="H", fontSize=8, fontName="Helvetica-Bold"),
-        )
-    )
-    elements.append(Spacer(1, 0.15 * cm))
+    elements.append(Spacer(1, 0.5 * cm))
 
     # 4. Declaração
     decl = (
@@ -277,7 +281,7 @@ def gerar_pdf_encaminhamento(encaminhamento):
         "de Estudos cancelado sem prejuízo das demais sanções previstas no regulamento de contrapartida."
     )
     elements.append(Paragraph(decl, normal_style))
-    elements.append(Spacer(1, 0.05 * cm))
+    elements.append(Spacer(1, 1.5 * cm))
     elements.append(Paragraph("Assinatura do Aluno Bolsista", ParagraphStyle(name="Sig", fontSize=8, alignment=1)))
     elements.append(Spacer(1, 0.12 * cm))
 
@@ -347,50 +351,79 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
     elements.append(Spacer(1, 0.08 * cm))
 
-    # 8. PROTOCOLO DE ENCAMINHAMENTO
-    elements.append(
-        Paragraph(
-            "PROTOCOLO DE ENCAMINHAMENTO",
-            ParagraphStyle(name="Prot", fontSize=10, fontName="Helvetica-Bold", alignment=1),
-        )
+    # 8. PROTOCOLO DE ENCAMINHAMENTO – estilo: cabeçalho em caixa com bordas grossas; tabela com 3 linhas (label | valor)
+    _prot_title_style = ParagraphStyle(
+        name="ProtTitle",
+        fontSize=11,
+        fontName="Helvetica-Bold",
+        alignment=1,  # center
+        spaceAfter=0,
+        spaceBefore=0,
     )
-    elements.append(Spacer(1, 0.05 * cm))
+    titulo_prot = Table(
+        [[Paragraph("PROTOCOLO DE ENCAMINHAMENTO", _prot_title_style)]],
+        colWidths=[16 * cm],
+        rowHeights=[0.6 * cm],
+    )
+    titulo_prot.setStyle(
+        TableStyle([
+            ("LINEABOVE", (0, 0), (-1, 0), 2.5, colors.black),
+            ("LINEBELOW", (0, 0), (-1, 0), 2.5, colors.black),
+            ("LINELEFT", (0, 0), (-1, 0), 1, colors.black),
+            ("LINERIGHT", (0, 0), (-1, 0), 1, colors.black),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ])
+    )
+    elements.append(titulo_prot)
 
-    # Linha fina
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
-    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.1 * cm))
+    # Tabela do protocolo: 3 linhas – Estagiário(a), Encaminhamento à, Cadastrado em (valor da data em caixa mais estreita)
+    _label_w = 3.5 * cm
+    _value_wide = 12 * cm
+    _value_date = 4 * cm
 
-    # Bloco protocolo (como no referência): Estagiário(a), Encaminhamento à, Cadastrado em ; datas; MATRÍCULA; CEP; Horário; assinatura
-    dados_prot = [
+    dados_prot_1 = [
         ["Estagiário(a):", nome_completo],
         ["Encaminhamento à:", enc.secretaria.nome],
-        ["Cadastrado em :", enc_data],
-        ["", enc_data],
-        ["MATRÍCULA:", aluno.matricula or "—"],
-        ["CEP", _format_cep(aluno.cep)],
-        ["Horário:", "___ : ___"],
-        ["Horário:", "___ : ___"],
-        ["", "___ : ___ a ___ : ___"],
-        ["", "___ : ___ a ___ : ___"],
     ]
-    t_prot = Table(dados_prot, colWidths=[3 * cm, 12 * cm])
-    t_prot.setStyle(
-        TableStyle(
-            [
-                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8),
-                ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
-                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 3),
-                ("TOPPADDING", (0, 0), (-1, -1), 2),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
-            ]
-        )
+    t_prot_1 = Table(dados_prot_1, colWidths=[_label_w, _value_wide])
+    t_prot_1.setStyle(
+        TableStyle([
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 9),
+            ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 8),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ])
     )
-    elements.append(t_prot)
-    elements.append(Spacer(1, 0.1 * cm))
+    elements.append(t_prot_1)
+
+    # Linha Cadastrado em com caixa de data mais estreita
+    dados_prot_2 = [["Cadastrado em :", enc_data]]
+    t_prot_2 = Table(dados_prot_2, colWidths=[_label_w, _value_date])
+    t_prot_2.setStyle(
+        TableStyle([
+            ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 9),
+            ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 8),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ])
+    )
+    elements.append(t_prot_2)
+    elements.append(Spacer(1, 0.15 * cm))
 
     # Assinatura protocolo
     elements.append(
