@@ -1,5 +1,12 @@
 asgiref==3.11.0
+charset-normalizer==3.4.4
 Django==6.0.1
+django-environ==0.12.0
+et_xmlfile==2.0.0
+gunicorn==25.0.3
+openpyxl==3.1.5
+packaging==26.0
+pillow==12.1.0
+reportlab==4.4.9
 sqlparse==0.5.5
-reportlab>=4.0.0
-openpyxl>=3.1.0
+whitenoise==6.11.0
