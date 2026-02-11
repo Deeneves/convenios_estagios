@@ -231,6 +231,11 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements.append(t6)
     elements.append(Spacer(1, 0.12 * cm))
 
+     # Linha grossa
+    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[1]))
+    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
+    elements.append(Spacer(1, 0.2 * cm))
+
     # 3. Título da seção de horas e tabela
     elements.append(
         Paragraph(
@@ -271,9 +276,58 @@ def gerar_pdf_encaminhamento(encaminhamento):
         )
     )
     elements.append(t_horas)
-    elements.append(Spacer(1, 0.5 * cm))
+    elements.append(Spacer(1, 0.35 * cm))
 
-    # 4. Declaração
+    # 4. Disponibilidade – quadro abaixo da tabela de horas
+    _disp_title_style = ParagraphStyle(name="DispTit", fontSize=9, fontName="Helvetica-Bold", alignment=0, spaceAfter=0, spaceBefore=0)
+    _disp_line_style = ParagraphStyle(name="DispLine", fontSize=8, alignment=0, spaceAfter=0, spaceBefore=0)
+    _disp_horario_style = ParagraphStyle(name="DispHorario", fontSize=8, alignment=2, spaceAfter=0, spaceBefore=0)
+
+    titulo_disp = Paragraph("Dias disponíveis para executar o estágio de contrapartida", _disp_title_style)
+    linha1_esq = Paragraph(
+        "Disponibilidade: 2ª (  ) 3ª (  ) 4ª (  ) 5ª (  ) 6ª (  ) Todos os dias (  )",
+        _disp_line_style,
+    )
+    linha1_dir = Paragraph("Horário: ___ : ___ a ___ : ___", _disp_horario_style)
+    linha2_esq = Paragraph(
+        "Disponibilidade: Sáb (  ) Dom (  ) Todos os dias (  )",
+        _disp_line_style,
+    )
+    linha2_dir = Paragraph("Horário: ___ : ___ a ___ : ___", _disp_horario_style)
+
+    tbl_disp = Table(
+        [
+            [titulo_disp, ""],
+            [linha1_esq, linha1_dir],
+            [linha2_esq, linha2_dir],
+        ],
+        colWidths=[10 * cm, 6 * cm],
+    )
+    tbl_disp.setStyle(
+        TableStyle([
+            ("SPAN", (0, 0), (1, 0)),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("ALIGN", (0, 0), (0, -1), "LEFT"),
+            ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+            ("BOX", (0, 0), (-1, -1), 2, colors.black),
+            ("LINEBELOW", (0, 1), (-1, 1), 0.5, colors.black),
+        ])
+    )
+    elements.append(tbl_disp)
+    elements.append(Spacer(1, 0.08 * cm))
+    elements.append(Spacer(1, 0.35 * cm))
+
+    # Linha grossa
+    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[1]))
+    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
+    elements.append(Spacer(1, 0.2 * cm))
+
+    # 5. Declaração
     decl = (
         "Declaro estar ciente da obrigatoriedade e me responsabilizo pelo cumprimento até o final do ano corrente "
         "das horas de contrapartida referente à Bolsa de Estudo - FALS conforme o que dispõe o Decreto Municipal "
@@ -283,27 +337,6 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements.append(Paragraph(decl, normal_style))
     elements.append(Spacer(1, 1.5 * cm))
     elements.append(Paragraph("Assinatura do Aluno Bolsista", ParagraphStyle(name="Sig", fontSize=8, alignment=1)))
-    elements.append(Spacer(1, 0.12 * cm))
-
-    # 5. Disponibilidade (como no referência: Disponibilidade duas linhas, depois checkboxes, depois "Dias disponíveis...", depois BOLSISTA DESDE)
-    elements.append(Paragraph("Disponibilidade:", ParagraphStyle(name="Disp1", fontSize=8, fontName="Helvetica-Bold")))
-    elements.append(Paragraph("Disponibilidade:", ParagraphStyle(name="Disp2", fontSize=8, fontName="Helvetica-Bold")))
-    elements.append(
-        Paragraph(
-            "2ª (  ) 3ª (  ) 4ª (  ) 5ª (  ) 6ª (  ) Todos os dias (  )<br/>"
-            "Sáb (  ) Dom (  ) Todos os dias (  )",
-            ParagraphStyle(name="DispOpt", fontSize=8),
-        )
-    )
-    elements.append(
-        Paragraph(
-            "Dias disponíveis para executar o estágio de contrapartida",
-            ParagraphStyle(name="DispTit", fontSize=8, fontName="Helvetica-Bold"),
-        )
-    )
-    elements.append(
-        Paragraph(f"BOLSISTA DESDE: {bolsista_desde}", ParagraphStyle(name="BolsistaDesde", fontSize=8, fontName="Helvetica-Bold"))
-    )
     elements.append(Spacer(1, 0.12 * cm))
 
     # 6. Texto de encaminhamento
