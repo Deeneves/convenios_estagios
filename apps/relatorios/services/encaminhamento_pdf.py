@@ -106,119 +106,132 @@ def gerar_pdf_encaminhamento(encaminhamento):
     doc = SimpleDocTemplate(
         buffer,
         pagesize=A4,
-        rightMargin=1.5 * cm,
-        leftMargin=1.5 * cm,
-        topMargin=1.2 * cm,
-        bottomMargin=1.2 * cm,
+        rightMargin=1.2 * cm,
+        leftMargin=1.2 * cm,
+        topMargin=0.7 * cm,
+        bottomMargin=0.7 * cm,
     )
 
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         name="EncTitle",
         parent=styles["Heading1"],
-        fontSize=14,
+        fontSize=13,
         alignment=1,  # center
-        spaceAfter=6,
+        spaceAfter=2,
         textTransform="uppercase",
     )
     sub_style = ParagraphStyle(
         name="EncSub",
         parent=title_style,
-        fontSize=12,
-        spaceAfter=8,
+        fontSize=11,
+        spaceAfter=4,
     )
     bold_style = ParagraphStyle(
         name="Bold",
         parent=styles["Normal"],
-        fontSize=9,
+        fontSize=8,
         fontName="Helvetica-Bold",
     )
     normal_style = ParagraphStyle(
         name="NormalSmall",
         parent=styles["Normal"],
-        fontSize=9,
+        fontSize=8,
         alignment=4,  # justify
     )
 
     elements = []
+    enc_data = _format_data(enc.data)
 
-    # 1. Título
-    elements.append(Paragraph("ENCAMINHAMENTO DE ESTAGIÁRIOS", title_style))
-    elements.append(Paragraph("DE CONTRAPARTIDA - FALS", sub_style))
-    elements.append(Spacer(1, 0.3 * cm))
+    # 1. Título (idêntico ao referência)
+    elements.append(Paragraph("ENCAMINHAMENTO DE ESTAGIÁRIOS DE CONTRAPARTIDA - FALS", title_style))
+    elements.append(Spacer(1, 0.15 * cm))
 
     # Linha grossa
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[2]))
+    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[1]))
     elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.4 * cm))
-
-    # 2. Dados do aluno (layout em grid - 2 pares label/valor por linha)
-    dados_aluno = [
-        ["MATRÍCULA:", aluno.matricula or "—", "NOME:", nome_completo[:50]],
-        ["NASCIMENTO:", _format_data(aluno.data_nascimento), "SEXO:", sexo_display],
-        ["ENDEREÇO:", (aluno.logradouro or "—")[:35], "Nº:", aluno.numero or "—"],
-        ["CIDADE:", aluno.cidade or "—", "BAIRRO:", aluno.bairro or "—"],
-        ["COMPLEMENTO:", aluno.complemento or "—", "Nº:", ""],
-        ["TELEFONE:", aluno.telefone or "—", "CELULAR:", aluno.celular or "—"],
-        ["RG:", aluno.rg or "—", "CPF:", cpf_fmt],
-        ["CEP:", _format_cep(aluno.cep), "", ""],
-    ]
-    t_aluno = Table(dados_aluno, colWidths=[2.2 * cm, 4.8 * cm, 1.8 * cm, 6 * cm])
-    t_aluno.setStyle(
-        TableStyle(
-            [
-                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTNAME", (2, 0), (2, -1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
-                ("TEXTCOLOR", (1, 0), (1, 0), colors.HexColor("#2563EB")),  # Matrícula em azul
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 2),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
-                ("TOPPADDING", (0, 0), (-1, -1), 2),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
-            ]
-        )
-    )
-    elements.append(t_aluno)
-    elements.append(Spacer(1, 0.3 * cm))
-
-    # Linha fina
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
-    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.3 * cm))
-
-    # 3. Curso e bolsista
-    dados_curso = [
-        ["CURSO:", curso_nome, "CURSANDO:", ano_cursando, "BOLSISTA DESDE:", bolsista_desde],
-    ]
-    t_curso = Table(dados_curso, colWidths=[1.5 * cm, 5 * cm, 2 * cm, 2 * cm, 2.5 * cm, 2.5 * cm])
-    t_curso.setStyle(
-        TableStyle(
-            [
-                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTNAME", (2, 0), (2, -1), "Helvetica-Bold"),
-                ("FONTNAME", (4, 0), (4, -1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
-                ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
-                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 4),
-                ("TOPPADDING", (0, 0), (-1, -1), 4),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-            ]
-        )
-    )
-    elements.append(t_curso)
     elements.append(Spacer(1, 0.2 * cm))
 
-    # 4. Tabela de horas
-    titulo_horas = Paragraph(
-        "<b>Relatório de Horas Cumpridas pelo(a) Bolsista</b>",
-        ParagraphStyle(name="H", fontSize=9, fontName="Helvetica-Bold"),
+    # 2. Dados do aluno – tabelas de uma linha com colunas de largura igual para ocupar toda a linha
+    _largura_linha = 16 * cm
+    _col3 = _largura_linha / 3   # três colunas iguais
+    _col2 = _largura_linha / 2   # duas colunas iguais
+    _cell_style = ParagraphStyle(
+        name="DadosAlunoCell",
+        fontSize=8,
+        alignment=0,  # LEFT
+        spaceAfter=0,
+        spaceBefore=0,
+        leftIndent=0,
+        rightIndent=0,
     )
-    elements.append(titulo_horas)
-    elements.append(Spacer(1, 0.1 * cm))
+    _tbl_style = TableStyle([
+        ("FONTSIZE", (0, 0), (-1, -1), 8),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+    ])
+    matricula_val = aluno.matricula or "—"
+    matricula_para = Paragraph(
+        f'<b>MATRÍCULA:</b> <font color="#2563EB"><u>{matricula_val}</u></font>',
+        _cell_style,
+    )
+    # Linha 1: MATRÍCULA | RG | CPF
+    t1 = Table([
+        [matricula_para, Paragraph(f'<b>RG:</b> {aluno.rg or "—"}', _cell_style), Paragraph(f'<b>CPF:</b> {cpf_fmt}', _cell_style)]
+    ], colWidths=[_col3, _col3, _col3])
+    t1.setStyle(_tbl_style)
+    elements.append(t1)
 
+    # Linha 2: NOME | NASCIMENTO | SEXO
+    t2 = Table([[
+        Paragraph(f'<b>NOME:</b> {nome_completo[:50]}', _cell_style),
+        Paragraph(f'<b>NASCIMENTO:</b> {_format_data(aluno.data_nascimento)}', _cell_style),
+        Paragraph(f'<b>SEXO:</b> {sexo_display}', _cell_style),
+    ]], colWidths=[_col3, _col3, _col3])
+    t2.setStyle(_tbl_style)
+    elements.append(t2)
+
+    # Linha 3: ENDEREÇO | Nº | CIDADE
+    t3 = Table([[
+        Paragraph(f'<b>ENDEREÇO:</b> {(aluno.logradouro or "—")[:45]}', _cell_style),
+        Paragraph(f'<b>Nº:</b> {aluno.numero or "—"}', _cell_style),
+        Paragraph(f'<b>CIDADE:</b> {aluno.cidade or "—"}', _cell_style),
+    ]], colWidths=[_col3, _col3, _col3])
+    t3.setStyle(_tbl_style)
+    elements.append(t3)
+
+    # Linha 4: BAIRRO | COMPLEMENTO | Nº
+    t4 = Table([[
+        Paragraph(f'<b>BAIRRO:</b> {aluno.bairro or "—"}', _cell_style),
+        Paragraph(f'<b>COMPLEMENTO:</b> {(aluno.complemento or "—")[:30]}', _cell_style),
+        Paragraph('<b>Nº:</b> ', _cell_style),
+    ]], colWidths=[_col3, _col3, _col3])
+    t4.setStyle(_tbl_style)
+    elements.append(t4)
+
+    # Linha 5: TELEFONE | CELULAR | CEP
+    t5 = Table([[
+        Paragraph(f'<b>TELEFONE:</b> {aluno.telefone or "—"}', _cell_style),
+        Paragraph(f'<b>CELULAR:</b> {aluno.celular or "—"}', _cell_style),
+        Paragraph(f'<b>CEP:</b> {_format_cep(aluno.cep)}', _cell_style),
+    ]], colWidths=[_col3, _col3, _col3])
+    t5.setStyle(_tbl_style)
+    elements.append(t5)
+
+    # Linha 6: CURSO | CURSANDO (duas colunas para ocupar toda a linha)
+    t6 = Table([[
+        Paragraph(f'<b>CURSO:</b> {curso_nome}', _cell_style),
+        Paragraph(f'<b>CURSANDO:</b> {ano_cursando}', _cell_style),
+    ]], colWidths=[_col2, _col2])
+    t6.setStyle(_tbl_style)
+    elements.append(t6)
+    elements.append(Spacer(1, 0.12 * cm))
+
+    # 3. Tabela de horas (antes do título "Relatório...")
     dados_horas = [
         ["Ano", "1º ANO", "2º ANO", "3º ANO", "4º ANO", "TOTAL", "MÉDIA"],
         ["Qtd. Horas", h1, h2, h3, h4, h_total, h_media],
@@ -232,43 +245,31 @@ def gerar_pdf_encaminhamento(encaminhamento):
             [
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTNAME", (0, 1), (0, 1), "Helvetica-Bold"),
-                ("TEXTCOLOR", (0, 1), (0, 1), colors.HexColor("#CC0000")),
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
                 ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
                 ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E5E7EB")),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 4),
-                ("TOPPADDING", (0, 0), (-1, -1), 4),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LEFTPADDING", (0, 0), (-1, -1), 3),
+                ("TOPPADDING", (0, 0), (-1, -1), 2),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
             ]
         )
     )
     elements.append(t_horas)
-    elements.append(Spacer(1, 0.3 * cm))
+    elements.append(Spacer(1, 0.08 * cm))
 
-    # Linha fina
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
-    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.2 * cm))
-
-    # 5. Disponibilidade
-    disp = Paragraph(
-        "<b>Dias disponíveis para executar o estágio de contrapartida</b><br/>"
-        "Disponibilidade: 2ª (  ) 3ª (  ) 4ª (  ) 5ª (  ) 6ª (  ) Todos os dias (  ) Horário: ___ : ___ a ___ : ___<br/>"
-        "Disponibilidade: Sáb (  ) Dom (  ) Todos os dias (  ) Horário: ___ : ___ a ___ : ___",
-        ParagraphStyle(name="Disp", fontSize=9, fontName="Helvetica-Bold"),
+    # Título da seção de horas (após a tabela, como no referência)
+    elements.append(
+        Paragraph(
+            "Relatório de Horas Cumpridas pelo(a) Bolsista",
+            ParagraphStyle(name="H", fontSize=8, fontName="Helvetica-Bold"),
+        )
     )
-    elements.append(disp)
-    elements.append(Spacer(1, 0.3 * cm))
+    elements.append(Spacer(1, 0.15 * cm))
 
-    # Linha fina
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
-    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.2 * cm))
-
-    # 6. Declaração
+    # 4. Declaração
     decl = (
         "Declaro estar ciente da obrigatoriedade e me responsabilizo pelo cumprimento até o final do ano corrente "
         "das horas de contrapartida referente à Bolsa de Estudo - FALS conforme o que dispõe o Decreto Municipal "
@@ -276,16 +277,32 @@ def gerar_pdf_encaminhamento(encaminhamento):
         "de Estudos cancelado sem prejuízo das demais sanções previstas no regulamento de contrapartida."
     )
     elements.append(Paragraph(decl, normal_style))
-    elements.append(Spacer(1, 0.1 * cm))
-    elements.append(Paragraph("_________________________ Assinatura do Aluno Bolsista", ParagraphStyle(name="Sig", fontSize=9, alignment=1)))
-    elements.append(Spacer(1, 0.3 * cm))
+    elements.append(Spacer(1, 0.05 * cm))
+    elements.append(Paragraph("Assinatura do Aluno Bolsista", ParagraphStyle(name="Sig", fontSize=8, alignment=1)))
+    elements.append(Spacer(1, 0.12 * cm))
 
-    # Linha fina
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
-    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.2 * cm))
+    # 5. Disponibilidade (como no referência: Disponibilidade duas linhas, depois checkboxes, depois "Dias disponíveis...", depois BOLSISTA DESDE)
+    elements.append(Paragraph("Disponibilidade:", ParagraphStyle(name="Disp1", fontSize=8, fontName="Helvetica-Bold")))
+    elements.append(Paragraph("Disponibilidade:", ParagraphStyle(name="Disp2", fontSize=8, fontName="Helvetica-Bold")))
+    elements.append(
+        Paragraph(
+            "2ª (  ) 3ª (  ) 4ª (  ) 5ª (  ) 6ª (  ) Todos os dias (  )<br/>"
+            "Sáb (  ) Dom (  ) Todos os dias (  )",
+            ParagraphStyle(name="DispOpt", fontSize=8),
+        )
+    )
+    elements.append(
+        Paragraph(
+            "Dias disponíveis para executar o estágio de contrapartida",
+            ParagraphStyle(name="DispTit", fontSize=8, fontName="Helvetica-Bold"),
+        )
+    )
+    elements.append(
+        Paragraph(f"BOLSISTA DESDE: {bolsista_desde}", ParagraphStyle(name="BolsistaDesde", fontSize=8, fontName="Helvetica-Bold"))
+    )
+    elements.append(Spacer(1, 0.12 * cm))
 
-    # 7. Texto de encaminhamento
+    # 6. Texto de encaminhamento
     texto1 = (
         "Encaminhamos o(a) aluno(a) supra citado(a) para cumprir horas de contrapartida da Bolsa de Estudos - FALS "
         "nesta Secretaria, a partir desta data, uma vez que esta Municipalidade deve ofertar oportunidades para que "
@@ -298,81 +315,88 @@ def gerar_pdf_encaminhamento(encaminhamento):
         "conforme Memos Circulares Sead nº. 129/10, 264/11 e 302/11 ao término do estágio."
     )
     elements.append(Paragraph(texto1, normal_style))
-    elements.append(Spacer(1, 0.15 * cm))
+    elements.append(Spacer(1, 0.06 * cm))
     elements.append(Paragraph(texto2, normal_style))
-    elements.append(Spacer(1, 0.2 * cm))
+    elements.append(Spacer(1, 0.12 * cm))
 
-    # Encaminhamento à / Em / Assinatura (layout: esq = Enc à, dir = Em + assinatura)
-    enc_data = _format_data(enc.data)
+    # 7. Encaminhamento à : / Em : (duas linhas, assinatura à direita – como no referência)
     dados_enc = [
-        [f"Encaminhamento à: {enc.secretaria.nome}", f"Em: {enc_data}"],
-        ["", ""],
+        [f"Encaminhamento à :", enc.secretaria.nome],
+        [f"Em :", enc_data],
         ["", "_________________________"],
         ["", responsavel],
         ["", "RF:"],
     ]
-    t_enc = Table(dados_enc, colWidths=[10 * cm, 5.5 * cm])
+    t_enc = Table(dados_enc, colWidths=[3.2 * cm, 12 * cm])
     t_enc.setStyle(
         TableStyle(
             [
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
                 ("ALIGN", (1, 0), (1, -1), "RIGHT"),
                 ("VALIGN", (0, 0), (-1, -1), "TOP"),
                 ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
             ]
         )
     )
     elements.append(t_enc)
-    elements.append(Spacer(1, 0.3 * cm))
+    elements.append(Spacer(1, 0.12 * cm))
 
     # Linha grossa
-    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[2]))
+    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[1]))
     elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.15 * cm))
+    elements.append(Spacer(1, 0.08 * cm))
 
     # 8. PROTOCOLO DE ENCAMINHAMENTO
     elements.append(
         Paragraph(
             "PROTOCOLO DE ENCAMINHAMENTO",
-            ParagraphStyle(name="Prot", fontSize=11, fontName="Helvetica-Bold", alignment=1),
+            ParagraphStyle(name="Prot", fontSize=10, fontName="Helvetica-Bold", alignment=1),
         )
     )
-    elements.append(Spacer(1, 0.1 * cm))
+    elements.append(Spacer(1, 0.05 * cm))
 
     # Linha fina
     elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[0.5]))
     elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
-    elements.append(Spacer(1, 0.2 * cm))
+    elements.append(Spacer(1, 0.1 * cm))
 
+    # Bloco protocolo (como no referência): Estagiário(a), Encaminhamento à, Cadastrado em ; datas; MATRÍCULA; CEP; Horário; assinatura
     dados_prot = [
         ["Estagiário(a):", nome_completo],
         ["Encaminhamento à:", enc.secretaria.nome],
-        ["Cadastrado em:", enc_data],
+        ["Cadastrado em :", enc_data],
+        ["", enc_data],
+        ["MATRÍCULA:", aluno.matricula or "—"],
+        ["CEP", _format_cep(aluno.cep)],
+        ["Horário:", "___ : ___"],
+        ["Horário:", "___ : ___"],
+        ["", "___ : ___ a ___ : ___"],
+        ["", "___ : ___ a ___ : ___"],
     ]
-    t_prot = Table(dados_prot, colWidths=[3.5 * cm, 11 * cm])
+    t_prot = Table(dados_prot, colWidths=[3 * cm, 12 * cm])
     t_prot.setStyle(
         TableStyle(
             [
                 ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
                 ("BOX", (0, 0), (-1, -1), 0.5, colors.black),
                 ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 4),
-                ("TOPPADDING", (0, 0), (-1, -1), 4),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LEFTPADDING", (0, 0), (-1, -1), 3),
+                ("TOPPADDING", (0, 0), (-1, -1), 2),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
             ]
         )
     )
     elements.append(t_prot)
-    elements.append(Spacer(1, 0.2 * cm))
+    elements.append(Spacer(1, 0.1 * cm))
 
     # Assinatura protocolo
     elements.append(
         Paragraph(
             f"_________________________<br/>{responsavel}<br/>RF:",
-            ParagraphStyle(name="SigProt", fontSize=9, alignment=2),
+            ParagraphStyle(name="SigProt", fontSize=8, alignment=2),
         )
     )
 

@@ -118,7 +118,7 @@ def encaminhamento_pdf(request, pk):
     )
     pdf_bytes = gerar_pdf_encaminhamento(enc)
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="encaminhamento_{enc.numero}.pdf"'
+    response["Content-Disposition"] = f'inline; filename="encaminhamento_{enc.numero}.pdf"'
     return response
 
 
