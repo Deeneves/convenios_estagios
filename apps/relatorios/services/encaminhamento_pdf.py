@@ -138,6 +138,9 @@ def gerar_pdf_encaminhamento(encaminhamento):
         parent=styles["Normal"],
         fontSize=8,
         alignment=4,  # justify
+        leftIndent=0,
+        rightIndent=0,
+        firstLineIndent=0,
     )
 
     elements = []
@@ -283,17 +286,19 @@ def gerar_pdf_encaminhamento(encaminhamento):
     _disp_line_style = ParagraphStyle(name="DispLine", fontSize=8, alignment=0, spaceAfter=0, spaceBefore=0)
     _disp_horario_style = ParagraphStyle(name="DispHorario", fontSize=8, alignment=2, spaceAfter=0, spaceBefore=0)
 
+    elements.append(Spacer(1, 0.5 * cm))
+
     titulo_disp = Paragraph("Dias disponíveis para executar o estágio de contrapartida", _disp_title_style)
     linha1_esq = Paragraph(
-        "Disponibilidade: 2ª (  ) 3ª (  ) 4ª (  ) 5ª (  ) 6ª (  ) Todos os dias (  )",
+        "Disponibilidade: 2ª [&nbsp;&nbsp;&nbsp;&nbsp;]  3ª [&nbsp;&nbsp;&nbsp;&nbsp;]  4ª [&nbsp;&nbsp;&nbsp;&nbsp;]  5ª [&nbsp;&nbsp;&nbsp;&nbsp;]  6ª [&nbsp;&nbsp;&nbsp;&nbsp;]  Todos os dias [&nbsp;&nbsp;&nbsp;&nbsp;]",
         _disp_line_style,
     )
-    linha1_dir = Paragraph("Horário: ___ : ___ a ___ : ___", _disp_horario_style)
+    linha1_dir = Paragraph("Horário: _____ : _____ a _____ : _____", _disp_horario_style)
     linha2_esq = Paragraph(
-        "Disponibilidade: Sáb (  ) Dom (  ) Todos os dias (  )",
+        "Disponibilidade: Sáb [&nbsp;&nbsp;&nbsp;&nbsp;]  Dom [&nbsp;&nbsp;&nbsp;&nbsp;]  Todos os dias [&nbsp;&nbsp;&nbsp;&nbsp;]",
         _disp_line_style,
     )
-    linha2_dir = Paragraph("Horário: ___ : ___ a ___ : ___", _disp_horario_style)
+    linha2_dir = Paragraph("Horário: _____ : _____ a _____ : _____", _disp_horario_style)
 
     tbl_disp = Table(
         [
@@ -327,6 +332,8 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
     elements.append(Spacer(1, 0.2 * cm))
 
+    elements.append(Spacer(1, 0.5 * cm))
+
     # 5. Declaração
     decl = (
         "Declaro estar ciente da obrigatoriedade e me responsabilizo pelo cumprimento até o final do ano corrente "
@@ -338,6 +345,13 @@ def gerar_pdf_encaminhamento(encaminhamento):
     elements.append(Spacer(1, 1.5 * cm))
     elements.append(Paragraph("Assinatura do Aluno Bolsista", ParagraphStyle(name="Sig", fontSize=8, alignment=1)))
     elements.append(Spacer(1, 0.12 * cm))
+
+    # Linha grossa
+    elements.append(Table([[""]], colWidths=[16 * cm], rowHeights=[1]))
+    elements[-1].setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.black)]))
+    elements.append(Spacer(1, 0.2 * cm))
+
+    elements.append(Spacer(1, 0.5 * cm))
 
     # 6. Texto de encaminhamento
     texto1 = (
